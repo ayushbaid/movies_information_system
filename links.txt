@@ -1,0 +1,5 @@
+* Differrence between postgres and MySQL
+https://osl.uoregon.edu/redmine/projects/netdot/wiki/MySQL-PostgreSQL_differences_quick_reference
+
+
+
