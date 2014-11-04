@@ -1,8 +1,3 @@
-
-sudo -u postgres psql << EOF
-\x
-
-
 /*
 * create a database and switch to it
 */
@@ -99,7 +94,7 @@ CREATE TABLE best_director(
 * trigger and a procedure to calculate the avergare rating for a movie each time a user fills in the ratings
 */
 CREATE OR REPLACE FUNCTION calculate_average_rating() 
-    RETURNS TRIGGER AS \$ratings_trigger\$
+    RETURNS TRIGGER AS $ratings_trigger$
     DECLARE
         old_ratings_sum_a   NUMERIC(2);
         old_ratings_sum_b   NUMERIC(2);
@@ -125,7 +120,7 @@ CREATE OR REPLACE FUNCTION calculate_average_rating()
             WHERE movie_id=NEW.movie_id;
         RETURN NULL;
     END;
-\$ratings_trigger\$ LANGUAGE plpgsql;
+$ratings_trigger$ LANGUAGE plpgsql;
                                 
         
 CREATE TRIGGER ratings_trigger
@@ -149,7 +144,7 @@ CREATE TRIGGER ratings_trigger
 
 CREATE OR REPLACE FUNCTION book_tickets(movie_id SMALLINT, theatre_id SMALLINT,
         day SMALLINT, time_slot time_slot_enum, 
-        no_of_tickets SMALLINT, is_category_a BOOLEAN) RETURNS NULL AS \$\$
+        no_of_tickets SMALLINT, is_category_a BOOLEAN) RETURNS NULL AS $$
     DECLARE
         filled_seats_value_a    SMALLINT;
         filled_seats_value_b    SMALLINT;
@@ -190,12 +185,3 @@ CREATE OR REPLACE FUNCTION book_tickets(movie_id SMALLINT, theatre_id SMALLINT,
     END;
             
         
- 
-    
-EOF
-
-
-   
-    
-    
-
