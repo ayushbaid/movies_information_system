@@ -74,7 +74,7 @@ CREATE TABLE showing(
 
 CREATE TABLE rated(
     movie_id SMALLINT NOT NULL REFERENCES movie(movie_id),
-    user_id SMALLINT NOT NULL REFERENCES user_table(user_id),
+    user_id VARCHAR(10) NOT NULL REFERENCES user_table(user_id),
     rating_a SMALLINT,
     rating_b SMALLINT,
     rating_c SMALLINT);
@@ -142,22 +142,27 @@ CREATE TRIGGER ratings_trigger
             is_category_a   BOOLEAN
 */
 
-CREATE OR REPLACE FUNCTION book_tickets(movie_id SMALLINT, theatre_id SMALLINT,
-        day SMALLINT, time_slot time_slot_enum, 
-        no_of_tickets SMALLINT, is_category_a BOOLEAN) RETURNS NULL AS $$
+CREATE OR REPLACE FUNCTION book_tickets(
+    movie_id SMALLINT,
+    theatre_id SMALLINT,
+    day SMALLINT,
+    time_slot time_slot_enum, 
+    no_of_tickets SMALLINT,
+    is_category_a BOOLEAN) 
+    RETURNS VOID AS $$
     DECLARE
         filled_seats_value_a    SMALLINT;
         filled_seats_value_b    SMALLINT;
-        revenue             INTEGER;
+        revenues                 INTEGER;
         cost                    SMALLINT;
     BEGIN
-        revenue = SELECT revenue FROM movie WHERE movie.movie_id=movie_id;
+        revenues = (SELECT revenue FROM movie WHERE movie.movie_id=movie_id);
         IF (is_category_a IS TRUE) THEN
-            filled_seats_value_a = SELECT filled_seats_a FROM showing 
+            filled_seats_value_a = (SELECT filled_seats_a FROM showing 
                                         WHERE (showing.theatre_id=theatre_id AND
                                         showing.movie_id==movie_id AND
                                         showing.day=day AND
-                                        showing.time_slot=time_slot);
+                                        showing.time_slot=time_slot));
             filled_seats_value_a = filled_seats_value_a + no_of_tickets;
             UPDATE showing SET filled_seats_a = filled_seats_value_a
                 WHERE (showing.theatre_id=theatre_id AND
@@ -166,11 +171,11 @@ CREATE OR REPLACE FUNCTION book_tickets(movie_id SMALLINT, theatre_id SMALLINT,
                 showing.time_slot=time_slot);
             cost = (SELECT cost_a FROM theatre WHERE theatre.theatre_id=theatre_id)*no_of_tickets;
         ELSE
-            filled_seats_value_b = SELECT filled_seats_b FROM showing 
+            filled_seats_value_b = (SELECT filled_seats_b FROM showing 
                                         WHERE (showing.theatre_id=theatre_id AND
                                         showing.movie_id==movie_id AND
                                         showing.day=day AND
-                                        showing.time_slot=time_slot);
+                                        showing.time_slot=time_slot));
             filled_seats_value_b = filled_seats_value_b + no_of_tickets;
             UPDATE showing SET filled_seats_b = filled_seats_value_b
                 WHERE (showing.theatre_id=theatre_id AND
@@ -179,9 +184,10 @@ CREATE OR REPLACE FUNCTION book_tickets(movie_id SMALLINT, theatre_id SMALLINT,
                 showing.time_slot=time_slot);
                 cost = (SELECT cost_b FROM theatre WHERE theatre.theatre_id=theatre_id)*no_of_tickets;
         ENDIF;
-        revenue = revenue + cost;
-        UPDATE movie SET movie.revenue = revenue WHERE movie.movie_id=movie_id;
-        RETURN NULL;
+        revenues = revenues + cost;
+        UPDATE movie SET movie.revenue = revenues WHERE movie.movie_id=movie_id;
+        RETURN;
     END;
+$$LANGUAGE plpgsql;
             
         
