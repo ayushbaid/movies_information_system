@@ -26,7 +26,7 @@ create table user_table(
 CREATE TABLE movie(
     movie_id SMALLSERIAL PRIMARY KEY NOT NULL,
     title VARCHAR(20) NOT NULL,
-    year CHAR(4) NOT NULL,
+    year SMALLINT NOT NULL,
     revenue INTEGER DEFAULT 0 NOT NULL,
     dvd_only BOOLEAN DEFAULT false NOT NULL,
     director VARCHAR(20) NOT NULL,

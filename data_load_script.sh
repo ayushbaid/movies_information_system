@@ -1,14 +1,7 @@
-/*
-*how to execute:
-*moviesdb-#>\i pathof_mysqlfile.sql
-*/
+sudo -u postgres psql << EOF
+\x
+\c moviesdb;
 
-/*
-* insert into movies
-* DATA SOURCES - 
-* 1) http://www.imdb.com/search/title?year=2014,2014&title_type=feature&sort=moviemeter,asc
-* 2) http://www.imdb.com/search/title?year=2013,2013&title_type=feature&sort=moviemeter,asc
-*/
 insert into movie(title,year,director,lead_actor,genre) 
     values('Fury',2014,'David Ayer','Brad Pitt','action');
 insert into movie(title,year,director,lead_actor,genre) 
@@ -122,8 +115,5 @@ insert into produced_by(movie_id,person_id) (
 insert into produced_by(movie_id,person_id) (
     select m.movie_id, p.person_id from movie as m, person as p 
     where m.title='The Conjuring' and p.name in ('Peter Safran','Tony DeRosa-Grund','Rob Cowan') and m.year=2013);
-
-
     
-
-
+EOF
