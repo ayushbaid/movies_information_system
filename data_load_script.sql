@@ -122,6 +122,44 @@ insert into produced_by(movie_id,person_id) (
 insert into produced_by(movie_id,person_id) (
     select m.movie_id, p.person_id from movie as m, person as p 
     where m.title='The Conjuring' and p.name in ('Peter Safran','Tony DeRosa-Grund','Rob Cowan') and m.year=2013);
+    
+/* inserting theatres*/
+insert into theatre(theatre_name,cost_a,cost_b,total_seats_a,total_seats_b) values
+    ('PVR',200,300,50,75),
+    ('Cinepolis',150,225,60,60);
+    
+    
+/* inserting shows*/
+insert into showing(theatre_id,movie_id,time_slot,day) values
+    ((select theatre_id from theatre where theatre_name='PVR'),
+        (select movie_id from movie where title='Interstellar'),
+        'morning','2014-11-08');
+insert into showing(theatre_id,movie_id,time_slot,day) values
+    ((select theatre_id from theatre where theatre_name='PVR'),
+        (select movie_id from movie where title='Interstellar'),
+        'evening','2014-11-08');
+insert into showing(theatre_id,movie_id,time_slot,day) values
+    ((select theatre_id from theatre where theatre_name='Cinepolis'),
+        (select movie_id from movie where title='Interstellar'),
+        'night','2014-11-08');
+
+
+/* creating users*/
+insert into user_table values ('ayushbaid','Ayush Baid','hostel 7','9167783072','password',true);
+
+/* adding awards for 2013*/
+insert into awards(best_movie_movie_id,best_actor_movie_id,best_actor_id,year) values
+    ((select movie_id from movie where title='The Conjuring'),
+        (select movie_id from movie where title='The Hunger Games'),
+        (select person_id from person where name='Jennifer Lawrence'),
+        2013);
+
+
+
+
+    
+    
+
 
 
     
