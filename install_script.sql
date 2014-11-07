@@ -21,7 +21,7 @@ create table user_table(
 CREATE TABLE movie(
     movie_id SMALLSERIAL PRIMARY KEY NOT NULL,
     title VARCHAR(20) NOT NULL,
-    year CHAR(4) NOT NULL,
+    year SMALLINT NOT NULL,
     revenue INTEGER DEFAULT 0 NOT NULL,
     dvd_only BOOLEAN DEFAULT false NOT NULL,
     director VARCHAR(20) NOT NULL,
@@ -183,7 +183,7 @@ CREATE OR REPLACE FUNCTION book_tickets(
                 showing.day=day AND
                 showing.time_slot=time_slot);
                 cost = (SELECT cost_b FROM theatre WHERE theatre.theatre_id=theatre_id)*no_of_tickets;
-        ENDIF;
+        END IF;
         revenues = revenues + cost;
         UPDATE movie SET movie.revenue = revenues WHERE movie.movie_id=movie_id;
         RETURN;
